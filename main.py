@@ -5,6 +5,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver import FirefoxOptions
 
+import get_validate
 
 find_token = re.compile('token":"(.*?)"')
 find_msg = re.compile('msg":"(.*?)"')
@@ -18,14 +19,16 @@ def get_cookies(number,passwd):
     wd.get(url)
     time.sleep(2)
     # 给验证码参数赋值
-    # try:
-    #     validate_element = wd.find_element_by_class_name("yidun_input")
-    # except Exception as e:
-    #     print("Try again")
-    #     time.sleep(2)
-    #     validate_element = wd.find_element_by_class_name("yidun_input")
-    # wd.execute_script("arguments[0].value = '叫你偷懒';", validate_element)
-    # print("over")
+    try:
+        validate_element = wd.find_element_by_class_name("yidun_input")
+    except Exception as e:
+        print("Try again")
+        time.sleep(2)
+        validate_element = wd.find_element_by_class_name("yidun_input")
+    validate = get_validate.get_validate()
+    # validate = input()
+    wd.execute_script("arguments[0].value = '%s';"%validate, validate_element)
+    print("over")
     # 键入账号密码
     name_element = wd.find_element_by_id("un")
     name_element.clear()
@@ -70,7 +73,7 @@ def get_token(number, cookies):
         'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
     }
     info = requests.get(url, headers = header)
-    # print(info.text)
+    print(info.text)
     token = re.findall(find_token,info.text)
     print(token)
     print("获取token完毕")
@@ -100,7 +103,7 @@ def class_info(number,cookie,token):
             "isMajor":"1",
             "teachingClassType":"QXKC",
             "isMajor":"1",
-            "queryContent":"08067044"},
+            "queryContent":"XGXKLBDM:12000010,"},
             "pageSize":"14",
             "pageNumber":"0",
             "order":""}
@@ -151,7 +154,7 @@ def fliter(infos,num):
     infos_dict = json.loads(infos_str)
     if infos_dict["msg"] == "查询推荐选课成功":
         for dataList in infos_dict["dataList"]:
-            if dataList["courseNumber"] in ["08067044"]:
+            if dataList["courseNumber"] in ["01009443","01023037","01023001"]:
                 print(dataList["courseName"]+f" nums:{num}")
                 if dataList["isFull"] != "1":
                     res = final_choice(number,cookie,token,dataList["teachingClassID"])
@@ -160,7 +163,7 @@ def fliter(infos,num):
         print("课程不存在")
     
 if __name__ == "__main__":
-    number = "2020xxxxxx"
+    number = "xxxxxx"
     passwd = "xxxxxxxx"
     cookie = get_cookies(number,passwd)
     token = get_token(number, cookie)
@@ -173,6 +176,7 @@ if __name__ == "__main__":
             msg = fliter(msg,num)
             if msg != None:
                 print(msg)
+                input("输出enter继续：")
             time.sleep(10)
         except Exception as e:
             end = time.time()
