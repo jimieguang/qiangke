@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  验证码示例
+
+  <style type="text/css">
+    #appendWrap {
+      position: relative;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-container" id="appendWrap">
+    <button id="j-bind">点击弹出验证码</button>
+    <div id="captcha"></div>
+    <div id="validate"></div>
+  </div>
+  <script src="https://cstaticdun.126.net/load.min.js?t=201903281201"></script>
+  <!-- 地址中的t参数强烈建议设置为分钟级别时间戳，避免该文件被浏览器长时间缓存 -->
+  <script>
+    initNECaptcha({
+      captchaId: '5a63b6131a824620af00177ddfa3d19e',
+      element: '#captcha',
+      mode: 'popup',
+      width: '320px',
+      appendTo: '#appendWrap',
+      onVerify: function (err,data) {
+        // TODO：处理验证码验证结果
+        document.getElementById('validate').textContent = data.validate
+      }
+    }, function onload(instance) {
+      // 初始化成功
+      captchaIns = instance
+      captchaIns.popUp()
+    }, function onerror(err) {
+      // 验证码初始化失败处理逻辑，例如：提示用户点击按钮重新初始化
+    })
+    // 监听button的点击事件，弹出验证码
+    document.getElementById('j-bind').addEventListener('click', function () {
+      captchaIns && captchaIns.popUp()
+    });
+
+  </script>
+</body>
+
+</html>
