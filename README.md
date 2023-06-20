@@ -3,6 +3,7 @@
 
 # 使用方法
 部署好selenium环境（用于获取cookie）
+（修改main函数的必要设置）
 输入账号密码
 修改需要筛选课程的编号（需要同步修改querySetting中的queryContent参数）
 运行并等待
